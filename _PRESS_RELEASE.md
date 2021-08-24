@@ -17,28 +17,28 @@ Once the project moves into development, the press release can be used as a touc
  -->
  
 ## Heading ##
-  > Name the product in a way the reader (i.e. your target customers) will understand.
+  > USA Google Trends History by State.
 
 ## Sub-Heading ##
-  > Describe who the market for the product is and what benefit they get. One sentence only underneath the title.
+  > Analytics could benefit from gauging previous search queries filtered by state at a specific time frame.
 
 ## Summary ##
-  > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
+  > The inspiration for this is in this video https://www.youtube.com/watch?v=xm91jBeN4oo&t=84s&ab_channel=V1Analytics. It is the U.S map showing state borders, and inside each of them include a specific search trend that was popular on the given month and year. If search trend is clicked on, a new window will appear that directs them to a google search of the trend clicked on.
 
 ## Problem ##
-  > Describe the problem your product solves.
+  > Google Trends currently has a lot of functionality, but finding trends by geo location of specific states becomes difficult as there is a lot of navigation in order to find that.
 
 ## Solution ##
-  > Describe how your product elegantly solves the problem.
+  > I plan to conglomerate and simplify the process of accessing popular search trends by state for over 10 years into an interactable map of the US.
 
 ## Quote from You ##
-  > A quote from a spokesperson in your company.
+  > Thank you V1Analytics for the inspiration to create this. 
 
 ## How to Get Started ##
-  > Describe how easy it is to get started.
+  > Just movethe slider and you can see the the date change by month and year, and corresponding search trends for that timeline!
 
 ## Customer Quote ##
-  > Provide a quote from a hypothetical customer that describes how they experienced the benefit.
+  > This product allowed me to see popular stuff I had long forgotten happened in Arkansa!
 
 ## Closing and Call to Action ##
-  > Wrap it up and give pointers where the reader should go next.
+  > If you would like to see a more thorough map with actual dates, please watch V1 Analytics video on it, and like and subscribe!
