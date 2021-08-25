@@ -6,13 +6,18 @@ const parser = require('body-parser');
 const {findTrends} = require('../database/index.js')
 const port = 3000;
 
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(__dirname + '/../client/dist'));
 app.use(parser.json());
 app.use(morgan('dev'));
 
-app.get('/:year/:month', (req, res) => {
+app.get('/states', (req, res) => {
+  res.send('hello');
+})
+
+app.get('/states/:year/:month', (req, res) => {
+  console.log('hello');
   findTrends(req.params, (response) => {
-    res.send(response).status(200);
+    res.send(response);
   });
 })
 

@@ -1,10 +1,13 @@
 const path = require('path');
+var SRC_DIR = path.join(__dirname, '/client/Components/index.js')
+var DIST_DIR = path.join(__dirname, '/client/dist');
+
 module.exports = {
-  entry: './client/index.js',
+  entry: SRC_DIR,
   mode: "development",
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'), //this is the folder you want to save your bundle in
+    path: DIST_DIR, //this is the folder you want to save your bundle in
   },
 
  module: {

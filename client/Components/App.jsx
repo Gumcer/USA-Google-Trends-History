@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import USAMap from './USAmap/USAMap.jsx';
 import RangeSlider from 'react-bootstrap-range-slider';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import axios from 'axios';
 import '../App.css';
 
 const App = () => {
@@ -12,7 +13,29 @@ const App = () => {
   const [month, setMonth] = useState('JAN');
   const [numMonth, setNumMonth] = useState(1);
   const [year, setYear] = useState(2010);
-  const [trends, setTrends] = useState()
+  const [trends, setTrends] = useState({});
+
+  const customizeStates = () => {
+    // axios.get(`/states`)
+    // .then((states) => {
+    //   console.log(states);
+    // })
+    // .catch((err) => {
+    //   console.log('Error: ', err)
+    // })
+    axios.get(`/states/${year}/${month}`)
+    .then((states) => {
+      console.log(states.data);
+    })
+    .catch((err) => {
+      console.log('Error: ', err)
+    })
+  }
+
+  useEffect (() => {
+    customizeStates();
+  }, [numMonth])
+
   const months = {
     1: 'JAN',
     2: 'FEB',
@@ -86,7 +109,10 @@ const App = () => {
             </Form.Group>
           </Form>
           <div className='hover-modal'>
-          State: {state}
+            <div>
+              State: {state}
+            </div>
+              Trend: 
           </div>
         </div>
       </div>

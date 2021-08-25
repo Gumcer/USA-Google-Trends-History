@@ -10,7 +10,7 @@ class USAMap extends React.Component {
   };
 
   hoverHandler = (stateAbbreviation) => {
-    console.log('hh', stateAbbreviation);
+    //console.log('hh', stateAbbreviation);
     this.props.onMouseEnter(stateAbbreviation);
   };
   fillStateColor = (state) => {
@@ -29,7 +29,7 @@ class USAMap extends React.Component {
   }
 
   stateHoverHandler = (state) => {
-    console.log('shh', state);
+   // console.log('shh', state);
     return this.hoverHandler;
   }
 
