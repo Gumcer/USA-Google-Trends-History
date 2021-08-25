@@ -5,3 +5,20 @@ path:hover {
   opacity: 0.50;
   cursor: pointer;
 }
+
+.container {
+  display: flex;
+}
+
+.right-side {
+  width: 30%;
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+}
+
+.total-date {
+  display: flex;
+}
