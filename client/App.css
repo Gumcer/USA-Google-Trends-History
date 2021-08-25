@@ -16,9 +16,10 @@ path:hover {
 
 .date {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
 
-.total-date {
+.time-container {
   display: flex;
+  flex-direction: column;
 }
