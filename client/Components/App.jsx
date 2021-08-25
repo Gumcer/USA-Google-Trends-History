@@ -12,6 +12,7 @@ const App = () => {
   const [month, setMonth] = useState('JAN');
   const [numMonth, setNumMonth] = useState(1);
   const [year, setYear] = useState(2010);
+  const [trends, setTrends] = useState()
   const months = {
     1: 'JAN',
     2: 'FEB',
@@ -84,6 +85,9 @@ const App = () => {
               </div>
             </Form.Group>
           </Form>
+          <div className='hover-modal'>
+          State: {state}
+          </div>
         </div>
       </div>
     </div>
