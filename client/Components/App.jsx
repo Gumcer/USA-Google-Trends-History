@@ -14,28 +14,9 @@ const App = () => {
   const [numMonth, setNumMonth] = useState(1);
   const [year, setYear] = useState(2010);
   const [trends, setTrends] = useState({});
-
-  const customizeStates = () => {
-    // axios.get(`/states`)
-    // .then((states) => {
-    //   console.log(states);
-    // })
-    // .catch((err) => {
-    //   console.log('Error: ', err)
-    // })
-    axios.get(`/states/${year}/${month}`)
-    .then((states) => {
-      console.log(states.data);
-    })
-    .catch((err) => {
-      console.log('Error: ', err)
-    })
-  }
-
-  useEffect (() => {
-    customizeStates();
-  }, [numMonth])
-
+  const [finalTrends, setFinalTrends] = useState({});
+  const [customize, setCustomize] = useState({});
+  const [fullState, setFullState] = useState('')
   const months = {
     1: 'JAN',
     2: 'FEB',
@@ -51,10 +32,78 @@ const App = () => {
     12: 'DEC',
   }
 
-  const monthToNum = (value) => {
-
+  const renderTrend = () => {
+    if (state.length != 0) {
+      var trending = trends[state];
+      return (
+        <div className='hover-modal'>
+          <h3>
+            State: {fullState}
+          </h3>
+          <div>
+            The most popular Google search on {month} {year} in {fullState} was...
+          </div>
+          <h2>
+            "{trending.trend}"
+          </h2>
+          <div>
+            Please click on {fullState} if you wish to be redirected to the actual search!
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className='hover-modal'>
+          Hover over any of the states and watch what happens!
+        </div>
+      )
+    }
+  }
+  const customizeStates = () => {
+    var custom = {};
+    var newTrends = {};
+    for (var state in trends) {
+      var trending = (trends[state]);
+      var newState = (trends[state]);
+      custom[state] = newState;
+    }
+    setCustomize(custom);
   }
 
+  const getTrends = () => {
+    axios.get(`/states/${year}/${month}`)
+      .then((states) => {
+        return states.data;
+      })
+      .then((data) => {
+        setTrends(data);
+      })
+      .catch((err) => {
+        console.log('Error: ', err)
+      })
+  }
+
+
+  useEffect(() => {
+    getTrends();
+  }, [numMonth])
+
+  useEffect(() => {
+    customizeStates();
+  }, [trends])
+
+  const monthToNum = () => {
+    for (var num in months) {
+      if (months[num] === month) {
+        setNumMonth(num);
+        break;
+      }
+    }
+  }
+
+  useEffect(() => {
+    monthToNum()
+  })
   const numToMonth = (value) => {
     setNumMonth(value);
     setMonth(months[value]);
@@ -64,24 +113,28 @@ const App = () => {
     return <div className='search'>State: {state} </div>
   }
   const hoverHandler = (event) => {
+    setFullState(event.target.firstElementChild.innerHTML);
     setState(event.target.dataset.name);
   }
   const mapHandler = (event) => {
-    alert(event.target.dataset.name);
+    var trending = trends[state];
+    if (window.confirm(`Clicking "ok" will redirect you to a Google search of "${trending.trend}". Are you sure? `)) {
+      window.location.href = `https://google.com/search?q=${trending.trend}`;
+    };
   };
 
   return (
     <div>
       <h1>Google Trends Map</h1>
       <div className='container'>
-        <USAMap title='US Map Google Trends' onClick={mapHandler} onMouseEnter={hoverHandler} />
+        <USAMap title='US Map Google Trends' customize={trends} onClick={mapHandler} onMouseEnter={hoverHandler} />
         <div className='right-side'>
           <Form>
             <Form.Group as={Row}>
               <div className='date'>
                 <div className='time-container'>
                   <div>Month</div>
-                  <Form.Control value={month} />
+                  <Form.Control style={{ width: '30px' }} value={month} onChange={(e) =>  setMonth(e.target.value)}/>
                 </div>
                 <RangeSlider
                   value={numMonth}
@@ -89,6 +142,7 @@ const App = () => {
                   min={1}
                   max={12}
                   tooltip={'off'}
+                  style={{ width: '200px' }}
                 />
               </div>
             </Form.Group>
@@ -96,24 +150,19 @@ const App = () => {
               <div className='date'>
                 <div className='time-container'>
                   <div>Year</div>
-                  <Form.Control value={year} />
+                  <Form.Control style={{ width: '35px' }} value={year} onChange={(e) => setYear(e.target.value)}/>
                 </div>
                 <RangeSlider
                   value={year}
                   onChange={e => setYear(e.target.value)}
                   min={2010}
                   max={2021}
-                  tooltip={'off'}
+                  style={{ width: '200px' }}
                 />
               </div>
             </Form.Group>
           </Form>
-          <div className='hover-modal'>
-            <div>
-              State: {state}
-            </div>
-              Trend: 
-          </div>
+          {renderTrend()}
         </div>
       </div>
     </div>

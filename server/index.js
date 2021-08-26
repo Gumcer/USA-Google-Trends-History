@@ -10,14 +10,10 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(parser.json());
 app.use(morgan('dev'));
 
-app.get('/states', (req, res) => {
-  res.send('hello');
-})
 
 app.get('/states/:year/:month', (req, res) => {
-  console.log('hello');
   findTrends(req.params, (response) => {
-    res.send(response);
+    res.json(response);
   });
 })
 
