@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import USAMap from './USAmap/USAMap.jsx';
+import TrendModal from './TrendModal.jsx';
 import RangeSlider from 'react-bootstrap-range-slider';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -32,33 +33,6 @@ const App = () => {
     12: 'DEC',
   }
 
-  const renderTrend = () => {
-    if (state.length != 0) {
-      var trending = trends[state];
-      return (
-        <div className='hover-modal'>
-          <h3>
-            State: {fullState}
-          </h3>
-          <div>
-            The most popular Google search on {month} {year} in {fullState} was...
-          </div>
-          <h2>
-            "{trending.trend}"
-          </h2>
-          <div>
-            Please click on {fullState} if you wish to be redirected to the actual search!
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div className='hover-modal'>
-          Hover over any of the states and watch what happens!
-        </div>
-      )
-    }
-  }
   const customizeStates = () => {
     var custom = {};
     var newTrends = {};
@@ -104,6 +78,7 @@ const App = () => {
   useEffect(() => {
     monthToNum()
   })
+  
   const numToMonth = (value) => {
     setNumMonth(value);
     setMonth(months[value]);
@@ -127,14 +102,21 @@ const App = () => {
     <div>
       <h1>Google Trends Map</h1>
       <div className='container'>
-        <USAMap title='US Map Google Trends' customize={trends} onClick={mapHandler} onMouseEnter={hoverHandler} />
+        <USAMap
+        title='US Map Google Trends'
+        customize={trends}
+        onClick={mapHandler}
+        onMouseEnter={hoverHandler} />
         <div className='right-side'>
           <Form>
             <Form.Group as={Row}>
               <div className='date'>
                 <div className='time-container'>
                   <div>Month</div>
-                  <Form.Control style={{ width: '30px' }} value={month} onChange={(e) =>  setMonth(e.target.value)}/>
+                  <Form.Control
+                  style={{ width: '30px' }}
+                  value={month}
+                  onChange={(e) =>  setMonth(e.target.value)}/>
                 </div>
                 <RangeSlider
                   value={numMonth}
@@ -150,7 +132,10 @@ const App = () => {
               <div className='date'>
                 <div className='time-container'>
                   <div>Year</div>
-                  <Form.Control style={{ width: '35px' }} value={year} onChange={(e) => setYear(e.target.value)}/>
+                  <Form.Control
+                  style={{ width: '35px' }}
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}/>
                 </div>
                 <RangeSlider
                   value={year}
@@ -162,7 +147,12 @@ const App = () => {
               </div>
             </Form.Group>
           </Form>
-          {renderTrend()}
+          <TrendModal
+            state={state}
+            month={month}
+            year={year}
+            fullState={fullState}
+            trending={trends[state]}/>
         </div>
       </div>
     </div>
