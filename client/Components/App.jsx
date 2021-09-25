@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
-import '../App.css';
+import '../styles.css';
 
 const App = () => {
   const [dateValue, setDateValue] = useState(12);
@@ -78,7 +78,7 @@ const App = () => {
   useEffect(() => {
     monthToNum()
   })
-  
+
   const numToMonth = (value) => {
     setNumMonth(value);
     setMonth(months[value]);

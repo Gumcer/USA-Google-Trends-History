@@ -6,7 +6,11 @@ const googleTrends = require('google-trends-api')
 const results = [];
 var delay = interval => new Promise(resolve => setTimeout(resolve, interval));
 var test = [];
-const filename = 'Jan2010.csv';
+var monthData = {};
+var i = 0;
+var j = 0;
+
+const filename = 'JAN2010.csv';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {
@@ -23,21 +27,6 @@ var year = {
     NOV: null,
     DEC: null,
   }
-}
-
-var months = {
-  JAN: 0,
-  FEB: 1,
-  MAR: 2,
-  APR: 3,
-  MAY: 4,
-  JUN: 5,
-  JUL: 6,
-  AUG: 7,
-  SEP: 8,
-  OCT: 9,
-  NOV: 10,
-  DEC: 11
 }
 
 var states = {
@@ -92,16 +81,12 @@ var states = {
   "WV": null,
   "WY": null
 }
+
 var stateArr = [];
 for (var state in states) {
   stateArr.push(state);
 }
-
-var i = 0;
-var j = 0;
 const allTrends = () => {
-  console.log(results.length);
-  console.log(results);
   resultLoop();
 }
 
@@ -110,7 +95,7 @@ const resultLoop = () => {
     console.log(j)
     //console.log(results[j].RISING);
     if (j === results.length) {
-      fs.writeFile('./JAN2010.json', JSON.stringify(test), (err) => {
+      fs.writeFile('./JAN2010.json', JSON.stringify(monthData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -120,12 +105,12 @@ const resultLoop = () => {
       i = 0;
       stateLoop();
     }
-  }, 175000)
+  }, 150000)
 }
 
 const stateLoop = () => {
   setTimeout(() => {
-    console.log(results[j].RISING)
+    console.log(stateArr[i])
     var option = {
       keyword: results[j].RISING,
       startTime: new Date(2010, 1),
@@ -135,12 +120,15 @@ const stateLoop = () => {
     googleTrends.interestByRegion(option)
       .then((response) => {
         test.push(response);
-        console.log(response);
+        // console.log(response);
         if (i < 49) {
           i++;
           stateLoop();
         } else {
+          monthData[results[j].RISING] = test;
+          console.log(monthData[results[j].RISING]);
           j++;
+          test = [];
           resultLoop();
         }
       })
@@ -154,7 +142,7 @@ fs.createReadStream(path.join(__dirname, filename))
   .pipe(csv())
   .on('data', (row) => {
     if (row.RISING)
-    results.push(row)
+      results.push(row)
   })
   .on('end', () => {
     allTrends();
