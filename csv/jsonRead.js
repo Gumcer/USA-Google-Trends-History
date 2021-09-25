@@ -67,8 +67,9 @@ fs.readFile(path.join(__dirname, filename), 'utf8', (err, jsonString) => {
   }
   var trendData = JSON.parse(jsonString);
   console.log(trendData);
-  var statesObj = {};
+  var result = {};
   for (var trend in trendData) {
+    var statesObj = {};
     var stateData = trendData[trend];
     for (var i = 0; i < stateData.length; i++) {
       var fullData = JSON.parse(stateData[i]);
@@ -78,13 +79,12 @@ fs.readFile(path.join(__dirname, filename), 'utf8', (err, jsonString) => {
         var value = data[j].value[0];
         valueSum += value;
       }
-      if (value === 0 && !(data.length > 0)) {
+      if (data.length === 0) {
         statesObj[stateArr[i]] = 0;
       } else {
       statesObj[stateArr[i]] = valueSum / data.length;
       }
     }
-    trendData[trend] = statesObj;
+    result[trend] = statesObj;
   }
-  console.log(trendData)
 })
