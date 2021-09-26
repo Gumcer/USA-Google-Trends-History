@@ -10,22 +10,22 @@ var monthData = {};
 var i = 0;
 var j = 0;
 
-const filename = 'JAN2010.csv';
+const filename = 'FEB2010.csv';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {
-    JAN: null,
-    FEB: null,
-    MAR: null,
-    APR: null,
-    MAY: null,
-    JUN: null,
-    JUL: null,
-    AUG: null,
-    SEP: null,
-    OCT: null,
-    NOV: null,
-    DEC: null,
+    JAN: 1,
+    FEB: 2,
+    MAR: 3,
+    APR: 4,
+    MAY: 5,
+    JUN: 6,
+    JUL: 7,
+    AUG: 8,
+    SEP: 9,
+    OCT: 10,
+    NOV: 11,
+    DEC: 12
   }
 }
 
@@ -95,7 +95,7 @@ const resultLoop = () => {
     console.log(j)
     //console.log(results[j].RISING);
     if (j === results.length) {
-      fs.writeFile('./JAN2010.json', JSON.stringify(monthData), (err) => {
+      fs.writeFile('./csv/trendData/FEB2010.json', JSON.stringify(monthData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -113,8 +113,8 @@ const stateLoop = () => {
     console.log(stateArr[i])
     var option = {
       keyword: results[j].RISING,
-      startTime: new Date(2010, 1),
-      endTime: new Date(2010, 2),
+      startTime: new Date(year.year, 1),
+      endTime: new Date(year.year, 2),
       geo: `US-${stateArr[i]}`
     }
     googleTrends.interestByRegion(option)
@@ -135,10 +135,10 @@ const stateLoop = () => {
       .catch((err) => {
         console.log(err);
       })
-  }, 2000)
+  }, 2200)
 }
 
-fs.createReadStream(path.join(__dirname, filename))
+fs.createReadStream(path.join(__dirname, 'initialTrendMonths/', filename))
   .pipe(csv())
   .on('data', (row) => {
     if (row.RISING)
