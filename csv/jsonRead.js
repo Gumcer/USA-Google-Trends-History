@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path')
-const filename = 'FEB2010.json';
+const filename = 'JUL2010.json';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {}

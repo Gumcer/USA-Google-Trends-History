@@ -1,8 +1,10 @@
 const underscore = require('underscore');
+const url = require('url');
 const csv = require('csv-parser')
 const fs = require('fs')
 const path = require('path')
 const googleTrends = require('google-trends-api')
+
 const results = [];
 var delay = interval => new Promise(resolve => setTimeout(resolve, interval));
 var test = [];
@@ -10,7 +12,7 @@ var monthData = {};
 var i = 0;
 var j = 0;
 
-const filename = 'FEB2010.csv';
+const filename = 'JUL2010.csv';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {
@@ -95,7 +97,7 @@ const resultLoop = () => {
     console.log(j)
     //console.log(results[j].RISING);
     if (j === results.length) {
-      fs.writeFile('./csv/trendData/FEB2010.json', JSON.stringify(monthData), (err) => {
+      fs.writeFile(`./csv/trendData/${filename.slice(0,7)}.json`, JSON.stringify(monthData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -111,11 +113,21 @@ const resultLoop = () => {
 const stateLoop = () => {
   setTimeout(() => {
     console.log(stateArr[i])
-    var option = {
-      keyword: results[j].RISING,
-      startTime: new Date(year.year, 1),
-      endTime: new Date(year.year, 2),
-      geo: `US-${stateArr[i]}`
+    var month = year.months[filename.slice(0, 3)];
+    if (month < 12) {
+      var option = {
+        keyword: results[j].RISING,
+        startTime: new Date(year.year, month),
+        endTime: new Date(year.year, (month + 1)),
+        geo: `US-${stateArr[i]}`
+      }
+    } else {
+      var option = {
+        keyword: results[j].RISING,
+        startTime: new Date(year.year, month),
+        endTime: new Date(year.year + 1, 1),
+        geo: `US-${stateArr[i]}`
+      }
     }
     googleTrends.interestByRegion(option)
       .then((response) => {
