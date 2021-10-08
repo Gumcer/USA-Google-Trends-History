@@ -12,7 +12,7 @@ var monthData = {};
 var i = 0;
 var j = 0;
 
-const filename = 'DEC2010.csv';
+const filename = 'JAN2011.csv';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {
@@ -97,7 +97,7 @@ const resultLoop = () => {
     console.log(j)
     //console.log(results[j].RISING);
     if (j === results.length) {
-      fs.writeFile(`./csv/trendData/${filename.slice(0,7)}.json`, JSON.stringify(monthData), (err) => {
+      fs.writeFile(`./csv/trendData/${year.year}/${filename.slice(0,7)}.json`, JSON.stringify(monthData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -150,7 +150,7 @@ const stateLoop = () => {
   }, 2200)
 }
 
-fs.createReadStream(path.join(__dirname, 'initialTrendMonths/', filename))
+fs.createReadStream(path.join(__dirname, `initialTrendMonths/${year.year}`, filename))
   .pipe(csv())
   .on('data', (row) => {
     if (row.RISING)

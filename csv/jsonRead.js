@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path')
-const filename = 'DEC2010.json';
+const filename = 'JAN2011.json';
 var year = {
   year: parseInt(filename.slice(3, 7)),
   months: {}
@@ -59,7 +59,6 @@ var states = {
   "WY": null
 }
 
-var allTrends = {};
 var statesObj = {};
 var stateArr = [];
 for (var state in states) {
@@ -78,72 +77,101 @@ function generateRandomColor() {
   return color;
 }
 
-fs.readFile(path.join(__dirname, 'trendData/', filename), 'utf8', (err, jsonString) => {
+fs.readFile(path.join(__dirname, `trendData/${year.year}`, filename), 'utf8', (err, jsonString) => {
   if (err) {
     console.log("File read failed:", err)
     return;
   }
   var trendData = JSON.parse(jsonString);
-  //console.log(trendData);
   var result = {};
   for (var trend in trendData) {
     var statesObj = {};
     var stateData = trendData[trend];
+    //console.log(trend);
     for (var i = 0; i < stateData.length; i++) {
       var fullData = JSON.parse(stateData[i]);
       var valueSum = 0;
+      var count = 0;
       var data = fullData.default.geoMapData;
-      for (var j = 0; j < data.length; j++) {
-        var value = data[j].value[0];
-        valueSum += value;
-      }
-      if (data.length === 0) {
+        for (var j = 0; j < data.length; j++) {
+          // grabs the state associated with the city
+          var cityState = data[j].geoName.slice(data[j].geoName.length - 2, data[j].geoName.length);
+          // api sometimes gives cities close to state, so filtering those out of the averaging
+          if (cityState !== stateArr[i]) {
+            continue;
+          }
+          var value = data[j].value[0];
+          valueSum += value;
+          count++;
+        }
+      if (count === 0) {
         statesObj[stateArr[i]] = 0;
       } else {
-      statesObj[stateArr[i]] = valueSum / data.length;
+        statesObj[stateArr[i]] = valueSum / count;
       }
     }
+    //console.log(statesObj);
     result[trend] = statesObj;
   }
   statesObj = {};
   for (var trend in result) {
     var stateData = result[trend];
     for (var i = 0; i < stateArr.length; i++) {
-      if(!statesObj[stateArr[i]]) {
+      if (!statesObj[stateArr[i]]) {
         statesObj[stateArr[i]] = {
           'trend': trend
         }
-      } else if (stateData[stateArr[i]] < stateData[stateArr[i-1]]){
+      } else if (stateData[stateArr[i]] > previousTrend[stateArr[i]]) {
         statesObj[stateArr[i]] = {
           'trend': trend
         }
       }
+      // console.log(stateArr[i] + ': ', stateData[stateArr[i]]);
+      // console.log(statesObj[stateArr[i]])
     }
+    var previousTrend = result[trend];
   }
 
-  for (var state in statesObj) {
-    var trend = statesObj[state].trend
-    var trendAndColor = statesObj[state];
-    if (!allTrends[trend]) {
-      allTrends[trend] = generateRandomColor();
-    }
-    trendAndColor['fill'] = allTrends[trend];
-  }
-  //console.log(statesObj);
-  fs.readFile(path.join(__dirname, 'finalData/2010.json'), 'utf8', (err, jsonString) => {
+  fs.readFile(path.join(__dirname, 'finalData/allTrends.json'), 'utf8', (err, jsonString) => {
     if (err) {
       console.log("File read failed:", err)
       return;
     }
-    var updateYear = JSON.parse(jsonString);
-    updateYear.months[filename.slice(0,3)] = statesObj;
-    console.log(updateYear);
+    var updateTrends = JSON.parse(jsonString);
+    for (var state in statesObj) {
+      var trend = statesObj[state].trend
+      var trendAndColor = statesObj[state];
+      if (!updateTrends[trend]) {
+        updateTrends[trend] = generateRandomColor();
+      }
+      trendAndColor['fill'] = updateTrends[trend];
+      //console.log(trendAndColor);
+    }
 
-    fs.writeFile('./csv/finalData/2010.json', JSON.stringify(updateYear), (err) => {
+    fs.writeFile('./csv/finalData/allTrends.json', JSON.stringify(updateTrends), (err) => {
       if (err) {
         console.log(err);
       }
-      console.log('update complete');
+      console.log('trends complete');
     })
-  });
+
+    fs.readFile(path.join(__dirname, `finalData/${year.year}.json`), 'utf8', (err, jsonString) => {
+      if (err) {
+        console.log("File read failed:", err)
+        return;
+      }
+
+      var updateYear = JSON.parse(jsonString);
+      updateYear.months[filename.slice(0, 3)] = statesObj;
+      console.log(statesObj);
+
+      fs.writeFile(`./csv/finalData/${year.year}.json`, JSON.stringify(updateYear), (err) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log('update complete');
+      })
+    });
+  })
+
 });
